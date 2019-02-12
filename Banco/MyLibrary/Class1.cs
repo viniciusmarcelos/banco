@@ -24,7 +24,8 @@ namespace ArrayLibrary
         //    while (true);
         //    return a;
         //}
-        private static string[] AddOneLength(string[] array) //returns an array iqual to the array imput + 1 length
+        ///returns an array iqual to the array imput + 1 length
+        public static string[] AddOneLength(string[] array)
         {
             string[] newArray = new string[array.Length + 1];
             for (int i = 0; i < array.Length; i++)
@@ -33,7 +34,8 @@ namespace ArrayLibrary
             }
             return newArray;
         }
-        private static string[] RemoveLast(string[] array) //returns an array iqual to the array imput - 1 length
+        ///returns an array iqual to the array imput - 1 length
+        public static string[] RemoveLast(string[] array)
         {
             string[] newArray = new string[array.Length - 1];
             for (int i = 0; i < array.Length - 1; i++)
@@ -42,21 +44,24 @@ namespace ArrayLibrary
             }
             return newArray;
         }
-        public static void PrintArray(string[] array) //prints the array using ", " between the elements, and "." after the last one
+        ///prints the array using ", " between the elements, and "." after the last one
+        public static void PrintArray(string[] array)
         {
             for (int i = 0; i < array.Length; i++)
             {
                 Console.Write(array[i] + (i < (array.Length - 1) ? ", " : ".\n"));
             }
         }
-        public static void PrintArrayWithIndexes(string[] array) //prints an array with indexes, example: {name1 , name2 , name3} = "0. name1, 1. name2, 2. name3."
+        ///prints an array with indexes, example: {name1 , name2 , name3} = "0. name1, 1. name2, 2. name3."
+        public static void PrintArrayWithIndexes(string[] array)
         {
             for (int i = 0; i < array.Length; i++)
             {
                 Console.Write(i + ". " + array[i] + (i < (array.Length - 1) ? ", " : ".\n"));
             }
         }
-        public static int Find_Ordinary(string[] array, string target) //returns the position of the target or -1 if not found
+        ///returns the position of the target or -1 if not found
+        public static int Find_Ordinary(string[] array, string target)
         {
             for (int i = 0; i < array.Length; i++)
             {
@@ -67,9 +72,10 @@ namespace ArrayLibrary
             }
             return -1;
         }
-        public static int Find_Binary(string[] array, string target)//returns the position of the target or -1 if not found. THE ARRAY WILL BE SORTED after using this. 
-                                                                    //Method: sorts the array, checks in witch half target is, than witch half of that half, and so on until it finds it 
+        ///returns the position of the target or -1 if not found. THE ARRAY WILL BE SORTED after using this.
+        public static int Find_Binary(string[] array, string target)
         {
+            //Method: sorts the array, checks in witch half target is, than witch half of that half, and so on until it finds it 
             int start = 0;
             int end = array.Length - 1;
             int mid = 0;
@@ -97,7 +103,8 @@ namespace ArrayLibrary
             }
             else return -1;
         }
-        public static string[] Join(string[] piece1, string[] piece2) //returns an array with the elements of piece1 followed by elements of piece2
+        ///returns an array with the elements of piece1 followed by elements of piece2
+        public static string[] Join(string[] piece1, string[] piece2)
         {
             string[] jointedPieces = new string[(piece1.Length + piece2.Length)];
             for (int i = 0; i < piece1.Length; i++)
@@ -110,7 +117,8 @@ namespace ArrayLibrary
             }
             return jointedPieces;
         }
-        public static string[] Trim(string[] array) //removes empty strings from the array, reducing it's size
+        ///removes empty strings from the array, reducing it's size
+        public static string[] Trim(string[] array)
         {
             int voidlessArraySize = 0;
             int pos = 0; //position to record on the voidless array
@@ -135,7 +143,8 @@ namespace ArrayLibrary
             }
             return voidlessArray;
         }
-        public static string[] Fill(string[] array, string fillinglText) //fills all slots of the array with the fillingText
+        ///fills all slots of the array with the fillingText
+        public static string[] Fill(string[] array, string fillinglText)
         {
             for (int i = 0; i < array.Length; i++)
             {
@@ -143,7 +152,8 @@ namespace ArrayLibrary
             }
             return array;
         }
-        public static string[] SortArray_BubbleSort(string[] array) //sorts an array with Bubble Sort method, this is the enhanced version
+        ///sorts an array with Bubble Sort method, this is the enhanced version
+        public static string[] SortArray_BubbleSort(string[] array)
         {
             int iMax = array.Length - 1;
             int lastSwap = 0;
@@ -163,7 +173,8 @@ namespace ArrayLibrary
             while (lastSwap != 0);
             return array;
         }
-        public static string[] SortArray_InsertionSort(string[] array) //by finding the smallest string then swaping it with the first one on the array, and so on
+        ///by finding the smallest string then swaping it with the first one on the array, and so on
+        public static string[] SortArray_InsertionSort(string[] array)
         {
             int lastOrdered = 0;
             do
@@ -181,7 +192,8 @@ namespace ArrayLibrary
             while (lastOrdered < array.Length - 1);
             return array;
         }
-        private static string[] SwapPositions(string[] array, int position1, int position2) //swaps positions between elements in position1 and position2
+        ///swaps positions between elements in position1 and position2
+        private static string[] SwapPositions(string[] array, int position1, int position2)
         {
             string aux = null;
             aux = array[position1];
@@ -189,7 +201,8 @@ namespace ArrayLibrary
             array[position2] = aux;
             return array;
         }
-        private static bool IsTheFirstSmaller(string string1, string string2) //checks if string1 is smaller than string2, returns true or false
+        ///checks if string1 is smaller than string2, returns true or false
+        private static bool IsTheFirstSmaller(string string1, string string2)
         {
             bool smaller = true;
             bool smallerFound = false;
@@ -219,7 +232,8 @@ namespace ArrayLibrary
             }
             return smaller;
         }
-        private static int MiddlePosition(int number1, int number2) //returns the average between number1 and number2
+        ///returns the average between number1 and number2
+        private static int MiddlePosition(int number1, int number2)
         {
             return (number1 + number2) / 2;
         }
@@ -244,16 +258,20 @@ namespace ArrayLibrary
         //    while (true);
         //    return a;
         //}
-        private static string[,] AddOneLength(string[,] array, int secondDimentionSize) //returns an array iqual to the array imput + 1 length
+        ///returns a 2D array iqual to the 2D array imput + 1 length
+        public static string[,] AddOneLength(string[,] array)
         {
-            string[,] newArray = new string[array.GetLength(0) + 1, secondDimentionSize - 1];
+            string[,] newArray = new string[array.GetLength(0), array.GetLength(1) - 1];
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                newArray[i,secondDimentionSize-1] = array[i,secondDimentionSize-1];
+                for (int x = 0; x < array.GetLength(1) - 1; x++)
+                {
+                    newArray[i, x] = array[i, x];
+                }
             }
             return newArray;
         }
-        //private static string[] RemoveLast(string[] array) //returns an array iqual to the array imput - 1 length
+        //public static string[] RemoveLast(string[] array) //returns an array iqual to the array imput - 1 length
         //{
         //    string[] newArray = new string[array.Length - 1];
         //    for (int i = 0; i < array.Length - 1; i++)
@@ -262,13 +280,30 @@ namespace ArrayLibrary
         //    }
         //    return newArray;
         //}
-        //public static void PrintArray(string[] array) //prints the array using ", " between the elements, and "." after the last one
-        //{
-        //    for (int i = 0; i < array.Length; i++)
-        //    {
-        //        Console.Write(array[i] + (i < (array.Length - 1) ? ", " : ".\n"));
-        //    }
-        //}
+        ///prints the 2D array using ", " between the categories, and every element is print in a different line
+        public static void PrintArray(string[,] array)
+        {
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                Console.WriteLine();
+                for (int x = 0; x < array.GetLength(1); x++)
+                {
+                    Console.Write(array[i, x]);
+                    if (x < array.GetLength(1) - 1)
+                    {
+                        Console.Write(", ");
+                    }
+                    else if (i != array.GetLength(0) - 1)
+                    {
+                        Console.Write(";\n");
+                    }
+                    else
+                    {
+                        Console.Write(".\n");
+                    }
+                }
+            }
+        }
         //public static void PrintArrayWithIndexes(string[] array) //prints an array with indexes, example: {name1 , name2 , name3} = "0. name1, 1. name2, 2. name3."
         //{
         //    for (int i = 0; i < array.Length; i++)
@@ -280,7 +315,7 @@ namespace ArrayLibrary
         {
             for (int i = 0; i < array.Length; i++)
             {
-                if (array[i,dimentionTargetIs] == target)
+                if (array[i, dimentionTargetIs] == target)
                 {
                     return i;
                 }
@@ -444,5 +479,5 @@ namespace ArrayLibrary
         //    return (number1 + number2) / 2;
         //}
         #endregion
-    }        
+    }
 }

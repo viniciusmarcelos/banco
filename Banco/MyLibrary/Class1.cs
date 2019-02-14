@@ -5,25 +5,6 @@ namespace ArrayLibrary
     public class ArrayLib
     {
         #region 1 Dimention
-        //public static string[] AddNames(string[] a)
-        //{
-        //    int i = 0;
-        //    do
-        //    {
-        //        a[i] = Console.ReadLine();
-        //        if (a[i] == "")
-        //        {
-        //            a = RemoveLast(a);
-        //            break;
-        //        }
-        //        Console.WriteLine("O nome {0} foi adicionado. Total de {1} nomes.\n" +
-        //                        "Entre com o próximo nome, ou apenas ENTER se terminou:", a[i], a.Length);
-        //        a = AddOneLength(a);
-        //        i++;
-        //    }
-        //    while (true);
-        //    return a;
-        //}
         ///returns an array iqual to the array imput + 1 length
         public static string[] AddOneLength(string[] array)
         {
@@ -258,29 +239,62 @@ namespace ArrayLibrary
         //    while (true);
         //    return a;
         //}
-        ///returns a 2D array iqual to the 2D array imput + 1 length
+        ///returns a 2D array iqual to the 2D array imput + 1 length on the (0) position
         public static string[,] AddOneLength(string[,] array)
         {
-            string[,] newArray = new string[array.GetLength(0), array.GetLength(1) - 1];
+            string[,] newArray = new string[array.GetLength(0) + 1, array.GetLength(1)];
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                for (int x = 0; x < array.GetLength(1) - 1; x++)
+                for (int x = 0; x < array.GetLength(1); x++)
                 {
                     newArray[i, x] = array[i, x];
                 }
             }
             return newArray;
         }
-        //public static string[] RemoveLast(string[] array) //returns an array iqual to the array imput - 1 length
-        //{
-        //    string[] newArray = new string[array.Length - 1];
-        //    for (int i = 0; i < array.Length - 1; i++)
-        //    {
-        //        newArray[i] = array[i];
-        //    }
-        //    return newArray;
-        //}
-        ///prints the 2D array using ", " between the categories, and every element is print in a different line
+        public static double[,] AddOneLength(double[,] array)
+        {
+            double[,] newArray = new double[array.GetLength(0) + 1, array.GetLength(1)];
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                for (int x = 0; x < array.GetLength(1); x++)
+                {
+                    newArray[i, x] = array[i, x];
+                }
+            }
+            return newArray;
+        }
+        /// <summary>
+        /// Removes the last line of a string [line,column].
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static string[,] RemoveLast(string[,] array)
+        {
+            string[,] newArray = new string[array.GetLength(0) - 1, array.GetLength(1)];
+            for (int i = 0; i < array.GetLength(0) - 1; i++)
+            {
+                for (int x = 0; x < array.GetLength(1); x++)
+                {
+                    newArray[i, x] = array[i, x];
+                }
+            }
+            return newArray;
+        }
+        public static double[,] RemoveLast(double[,] array)
+        {
+            double[,] newArray = new double[array.GetLength(0) - 1, array.GetLength(1)];
+            for (int i = 0; i < array.GetLength(0) - 1; i++)
+            {
+                for (int x = 0; x < array.GetLength(1); x++)
+                {
+                    newArray[i, x] = array[i, x];
+                }
+            }
+            return newArray;
+        }
+        ///prints the 2D array using ", " between the position (1),
+        ///";\n" between the position (0) and ".\n" for the last one
         public static void PrintArray(string[,] array)
         {
             for (int i = 0; i < array.GetLength(0); i++)
@@ -311,11 +325,30 @@ namespace ArrayLibrary
         //        Console.Write(i + ". " + array[i] + (i < (array.Length - 1) ? ", " : ".\n"));
         //    }
         //}
-        public static int Find_Ordinary(string[,] array, string target, int dimentionTargetIs) //returns the position of the target or -1 if not found
+        /// <summary>
+        /// Imput a string [line,column], a target and the column to search it in. 
+        /// Returns the line in which the target is at or -1 if not found.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="target"></param>
+        /// <param name="columnTargetIs"></param>
+        /// <returns></returns>
+        public static int Find_Ordinary(string[,] array, string target, int columnTargetIs)
         {
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 0; i < array.GetLength(0); i++)
             {
-                if (array[i, dimentionTargetIs] == target)
+                if (array[i, columnTargetIs] == target)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public static int Find_Ordinary(double[,] array, double target, int columnTargetIs)
+        {
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                if (array[i, columnTargetIs] == target)
                 {
                     return i;
                 }
@@ -436,14 +469,36 @@ namespace ArrayLibrary
         //    while (lastOrdered < array.Length - 1);
         //    return array;
         //}
-        //private static string[] SwapPositions(string[] array, int position1, int position2) //swaps positions between elements in position1 and position2
-        //{
-        //    string aux = null;
-        //    aux = array[position1];
-        //    array[position1] = array[position2];
-        //    array[position2] = aux;
-        //    return array;
-        //}
+
+        /// <summary>
+        /// Imputs string[line,column] and swaps the position of all of the elements from the line position1 to line position2.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="position1"></param>
+        /// <param name="position2"></param>
+        /// <returns></returns>
+        public static string[,] SwapLines(string[,] array, int line1, int line2)
+        {
+            string aux = null;
+            for (int i = 0; i < array.GetLength(1); i++)
+            {
+                aux = array[line1, i];
+                array[line1, i] = array[line2, i];
+                array[line2, i] = aux;
+            }
+            return array;
+        }
+        public static double[,] SwapLines(double[,] array, int line1, int line2)
+        {
+            double aux = 0;
+            for (int i = 0; i < array.GetLength(1); i++)
+            {
+                aux = array[line1, i];
+                array[line1, i] = array[line2, i];
+                array[line2, i] = aux;
+            }
+            return array;
+        }
         //private static bool IsTheFirstSmaller(string string1, string string2) //checks if string1 is smaller than string2, returns true or false
         //{
         //    bool smaller = true;

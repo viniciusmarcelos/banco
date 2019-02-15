@@ -13,14 +13,14 @@ namespace Banco
                 {"27352820663","carlos alberto andrade","27/04/1957" },
                 {"07386199651","mariana marcelos andrade","25/09/1985" },
                 {"93186894620","lucelia maria alves","22/11/1974" }};
-            double[,] accountsArray = new double[,] { { 01604075678, 666, 1000000.00 },
-            { 01604075678, 667, 100.12 },{ 27352820663, 668, 350.65 },
-            { 01604075678, 669, 250000.12 },{ 01604075678, 670, 20000.03 },
-            { 27352820663, 671, 885000.00 },{ 93186894620, 672, 123000.00 },
+            decimal[,] accountsArray = new decimal[,] { { 01604075678, 666, 1000000 },
+            { 01604075678, 667, 100.12M },{ 27352820663, 668, 350.65M },
+            { 01604075678, 669, 250000.12M },{ 01604075678, 670, 20000.03M },
+            { 27352820663, 671, 885000 },{ 93186894620, 672, 123000 },
             { 0, 673, 0},{01604075678,674,0 } };
             MainMenu(clientsArray, accountsArray);
         }
-        public static void MainMenu(string[,] clientsArray, double[,] accountsArray)
+        public static void MainMenu(string[,] clientsArray, decimal[,] accountsArray)
         {
             string[] mainMenuOptions = new string[] { "Clientes", "Contas", "Operações", "Sair" };
             MenuLib.PrintMenu(mainMenuOptions, "SISTEMA DO BANCO");
@@ -41,7 +41,7 @@ namespace Banco
                     break;
             }
         }
-        public static void ClientsMenu(string[,] clientsArray, double[,] accountsArray)
+        public static void ClientsMenu(string[,] clientsArray, decimal[,] accountsArray)
         {
             string[] clientsMenuOptions = new string[] { "Adicionar novo cliente",
                 "Alterar dados de um cliente existente", "Remover um cliente",
@@ -51,10 +51,6 @@ namespace Banco
             switch (clientsMenuChoice)
             {
                 case "Adicionar novo cliente":
-                    double a = 12.12D;
-                    double b = 12.12D;
-                    Console.WriteLine("{0} , {1} , {2}", a, b, a + b);
-                    Console.ReadLine();
                     clientsArray = ClientsLib.AddNewClient(clientsArray);
                     break;
                 case "Alterar dados de um cliente existente":
@@ -71,13 +67,13 @@ namespace Banco
             }
             MainMenu(clientsArray, accountsArray);
         }
-        public static void AccountsMenu(string[,] clientsArray, double[,] accountsArray)
+        public static void AccountsMenu(string[,] clientsArray, decimal[,] accountsArray)
         {
             MenuLib.PrintSubmenu("ACESSO AO MENU DE CONTAS");
             int clientPosition = Verifications.ReadCPF(clientsArray, "Digite o CPF do cliente:");
             if (clientPosition != -1)
             {
-                double.TryParse(clientsArray[clientPosition, 0], out double clientCPF);
+                decimal.TryParse(clientsArray[clientPosition, 0], out decimal clientCPF);
                 string[] accountsMenuOptions = new string[] { "Criar uma nova conta", "Remover uma conta",
                 "Consultar contas do cliente", "Retornar ao menu principal" };
                 MenuLib.PrintMenu(accountsMenuOptions, "MENU DE CONTAS");
@@ -102,7 +98,7 @@ namespace Banco
             }
             MainMenu(clientsArray, accountsArray);
         }
-        public static void OperationsMenu(string[,] clientsArray, double[,] accountsArray)
+        public static void OperationsMenu(string[,] clientsArray, decimal[,] accountsArray)
         {
             MenuLib.PrintSubmenu("ACESSO AO MENU DE OPERAÇÕES");
             int accountIndex = Verifications.ReadAccount(accountsArray, "Digite a conta na qual deseja realizar a operação:");
@@ -117,7 +113,7 @@ namespace Banco
             switch (operationsMenuChoice)
             {
                 case "Depósito":
-                    double creditValue = MenuLib.ReadMoneyValue("Entre com o valor a ser depositado na conta:");
+                    decimal creditValue = MenuLib.ReadMoneyValue("Entre com o valor a ser depositado na conta:");
                     if (MenuLib.ConfirmationMenu("Confirma a operação?"))
                     {
                         accountsArray[accountIndex, 2] += creditValue;
@@ -134,7 +130,7 @@ namespace Banco
                     }
                     break;
                 case "Saque":
-                    double debitValue = MenuLib.ReadMoneyValue("Entre com o valor a ser debitado da conta:");
+                    decimal debitValue = MenuLib.ReadMoneyValue("Entre com o valor a ser debitado da conta:");
                     if (!Verifications.IsThereEnougthCredit(accountsArray[accountIndex, 2], debitValue))
                     {
                         MenuLib.PrintMessage("Saldo insuficiente.\n\n" +

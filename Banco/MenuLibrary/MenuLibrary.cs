@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using ArrayLibrary;
 
 namespace MenuLibrary
@@ -108,12 +109,12 @@ namespace MenuLibrary
         {
             return ReadOption(options, "Digite a opção desejada:");
         }
-        public static double ReaddoubleValue(string message)
+        public static decimal ReaddecimalValue(string message)
         {
             while (true)
             {
                 PrintMessage(message);
-                if (!double.TryParse(Console.ReadLine(), out double value))
+                if (!decimal.TryParse(Console.ReadLine(), out decimal value))
                 {
                     message = "Valor digitado inválido. Digite um valor válido:";
                 }
@@ -123,13 +124,13 @@ namespace MenuLibrary
                 }
             }
         }
-        /// prints a message then reads value and checks if it's a double, loops if not, returns the double
-        public static double ReadMoneyValue(string message)
+        /// prints a message then reads value and checks if it's a decimal, loops if not, returns the decimal
+        public static decimal ReadMoneyValue(string message)
         {
             while (true)
             {
                 PrintMessage(message);
-                if (!double.TryParse(Console.ReadLine(), out double value) || !Verifications.TwoDecimalsCheck(value))
+                if (!decimal.TryParse(Console.ReadLine(), out decimal value))
                 {
                     message = "Valor digitado inválido. Digite um valor válido:";
                 }
@@ -140,7 +141,7 @@ namespace MenuLibrary
             }
         }
         ///sends default message to ReadMoneyValue
-        public static double ReadMoneyValue()
+        public static decimal ReadMoneyValue()
         {
             return ReadMoneyValue("Digite o valor:");
         }
@@ -198,10 +199,7 @@ namespace MenuLibrary
             if (ReadAndRecordCPF(clientsArray, i))
             {
                 ReadAndRecordName(clientsArray, i);
-                ReadAndRecordBirthDate(clientsArray, i);
-                MenuLib.PrintMessage("Cliente adicionado com sucesso!\n" +
-                    "Pressione qualquer tecla para retornar ao Menu.");
-                Console.ReadKey();
+                clientsArray = ReadAndRecordBirthDate(clientsArray, i);
                 return clientsArray;
             }
             return clientsArray;
@@ -297,7 +295,7 @@ namespace MenuLibrary
         {
             MenuLib.PrintMessage(message);
             Console.WriteLine("\nNome: {0}\nCPF: {1}\nData de Nascimento: {2}",
-                clientArray[clientIndex, 1], clientArray[clientIndex, 0], clientArray[clientIndex, 2]);
+                clientArray[clientIndex, 1], CPFFormat(clientArray[clientIndex, 0]), clientArray[clientIndex, 2]);
         }
         /// <summary>
         /// Prints the client data.
@@ -307,7 +305,17 @@ namespace MenuLibrary
         public static void PrintClient(string[,] clientArray, int clientIndex)
         {
             Console.WriteLine("\nNome: {0}\nCPF: {1}\nData de Nascimento: {2}",
-                clientArray[clientIndex, 1], clientArray[clientIndex, 0], clientArray[clientIndex, 2]);
+                clientArray[clientIndex, 1], CPFFormat(clientArray[clientIndex, 0]), clientArray[clientIndex, 2]);
+        }
+        /// <summary>
+        /// Reads a CPF raw input and returns it formated.
+        /// </summary>
+        /// <param name="cpfImput"></param>
+        /// <returns></returns>
+        public static string CPFFormat(string cpfImput)
+        {
+            int cpf = Convert.ToInt32(cpfImput);
+            return string.Format(@"{0:000\.000\.000-00}", cpf);
         }
         /// <summary>
         /// Prints the client's name and CPF.
@@ -370,18 +378,35 @@ namespace MenuLibrary
         /// <param name="clientsArray"></param>
         /// <param name="clientIndex"></param>
         /// <param name="message"></param>
-        private static void ReadAndRecordBirthDate(string[,] clientsArray, int clientIndex, string message)
+        private static string[,] ReadAndRecordBirthDate(string[,] clientsArray, int clientIndex, string message)
         {
-            clientsArray[clientIndex, 2] = MenuLib.ReadStringValue(message);
+            string birthDate = Verifications.ReadBirthDate(clientsArray, message);
+            if (!Verifications.IsClientUnderage(birthDate))
+            {
+                clientsArray[clientIndex, 2] = birthDate;
+                MenuLib.PrintMessage("Cliente adicionado com sucesso!\n" +
+                    "Pressione qualquer tecla para retornar ao Menu.");
+                Console.ReadKey();
+                return clientsArray;
+            }
+            else
+            {
+                clientsArray = ArrayLib.RemoveLast(clientsArray);
+                MenuLib.PrintMessage("O cliente não pôde ser cadastrado por ser menor de idade.\n" +
+                    "Operação cancelada. Digite qualquer tecla para retornar ao menu principal:");
+                Console.ReadKey();
+                return clientsArray;
+            }
         }
         /// <summary>
         /// sends default message to ReadAndRecordName
         /// </summary>
         /// <param name="clientsArray"></param>
         /// <param name="clientIndex"></param>
-        private static void ReadAndRecordBirthDate(string[,] clientsArray, int clientIndex)
+        private static string[,] ReadAndRecordBirthDate(string[,] clientsArray, int clientIndex)
         {
-            ReadAndRecordBirthDate(clientsArray, clientIndex, "Digite a data de nascimento do cliente:");
+            clientsArray = ReadAndRecordBirthDate(clientsArray, clientIndex, "Digite a data de nascimento do cliente:");
+            return clientsArray;
         }
     }
     public class AccountsLib
@@ -392,7 +417,7 @@ namespace MenuLibrary
         /// <param name="accountsArray"></param>
         /// <param name="cpf"></param>
         /// <returns></returns>
-        public static double[,] AddNewAccount(double[,] accountsArray, double cpf)
+        public static decimal[,] AddNewAccount(decimal[,] accountsArray, decimal cpf)
         {
             MenuLib.PrintSubmenu("CRIANDO NOVA CONTA");
             if (MenuLib.ConfirmationMenu("Tem certeza que deseja criar uma nova conta?", "Criar nova conta", "Cancelar"))
@@ -401,7 +426,7 @@ namespace MenuLibrary
                 accountsArray = ArrayLib.AddOneLength(accountsArray);
                 accountsArray[newAccountPosition, 0] = cpf;
                 accountsArray[newAccountPosition, 1] = accountsArray[newAccountPosition - 1, 1] + 1;
-                accountsArray[newAccountPosition, 2] = 50.00F;
+                accountsArray[newAccountPosition, 2] = 50;
                 PrintAccount(accountsArray, newAccountPosition, "\nA conta foi criada com sucesso! Veja:");
                 MenuLib.PrintMessage("Pressione qualquer tecla para retornar ao Menu.");
                 Console.ReadKey();
@@ -414,7 +439,7 @@ namespace MenuLibrary
         /// <param name="accountsArray"></param>
         /// <param name="cpf"></param>
         /// <returns></returns>
-        public static double[,] RemoveAccount(double[,] accountsArray, double cpf)
+        public static decimal[,] RemoveAccount(decimal[,] accountsArray, decimal cpf)
         {
             MenuLib.PrintSubmenu("REMOVER CONTA");
             int accountPosition = Verifications.ReadAccount(accountsArray, "Qual o número da conta a ser removida?");
@@ -465,11 +490,11 @@ namespace MenuLibrary
         /// <param name="accountsArray"></param>
         /// <param name="accountIndex"></param>
         /// <param name="message"></param>
-        public static void ConsultAccounts(double[,] accountsArray, double cpf)
+        public static void ConsultAccounts(decimal[,] accountsArray, decimal cpf)
         {
             MenuLib.PrintSubmenu("CONSULTANDO AS CONTAS");
             Console.WriteLine("Para o CPF informado ({0}), temos as seguintes contas:\n", cpf);
-            double totalBalance = 0;
+            decimal totalBalance = 0;
             for (int i = 0; i < accountsArray.GetLength(0); i++)
             {
                 if (accountsArray[i, 0] == cpf)
@@ -478,7 +503,7 @@ namespace MenuLibrary
                     totalBalance += accountsArray[i, 2];
                 }
             }
-            Console.WriteLine("\nO balanço total do cliente é: R${0}\n" +
+            Console.WriteLine("\nO balanço total do cliente é: {0:C}\n" +
                 "Digite qualquer tecla para retornar ao menu principal.", totalBalance);
             Console.ReadKey();
         }
@@ -488,10 +513,10 @@ namespace MenuLibrary
         /// <param name="accountsArray"></param>
         /// <param name="accountIndex"></param>
         /// <param name="message"></param>
-        public static void PrintAccount(double[,] accountsArray, int accountIndex, string message)
+        public static void PrintAccount(decimal[,] accountsArray, int accountIndex, string message)
         {
             MenuLib.PrintMessage(message);
-            Console.WriteLine("\nNúmero da conta: {0}\nSaldo da conta: {1}",
+            Console.WriteLine("\nNúmero da conta: {0}\nSaldo da conta: {1:C}",
                 accountsArray[accountIndex, 1], accountsArray[accountIndex, 2]);
         }
         /// <summary>
@@ -500,9 +525,9 @@ namespace MenuLibrary
         /// <param name="accountsArray"></param>
         /// <param name="accountIndex"></param>
         /// <param name="message"></param>
-        public static void PrintAccount(double[,] accountsArray, int accountIndex)
+        public static void PrintAccount(decimal[,] accountsArray, int accountIndex)
         {
-            Console.WriteLine("\nNúmero da conta: {0}\nSaldo da conta: {1}",
+            Console.WriteLine("\nNúmero da conta: {0}\nSaldo da conta: {1:C}",
                 accountsArray[accountIndex, 1], accountsArray[accountIndex, 2]);
         }
         /// <summary>
@@ -511,9 +536,9 @@ namespace MenuLibrary
         /// <param name="accountsArray"></param>
         /// <param name="accountIndex"></param>
         /// <param name="message"></param>
-        public static void PrintBalance(double[,] accountsArray, int accountIndex)
+        public static void PrintBalance(decimal[,] accountsArray, int accountIndex)
         {
-            Console.WriteLine("Saldo da conta: {0}", accountsArray[accountIndex, 2]);
+            Console.WriteLine("Saldo da conta: {0:C}", accountsArray[accountIndex, 2]);
         }
     }
     public class Verifications
@@ -548,66 +573,6 @@ namespace MenuLibrary
             }
         }
         /// <summary>
-        /// Checks if account is zeroed in balance, returns true if it is.
-        /// </summary>
-        /// <param name="accountsArray"></param>
-        /// <param name="accountIndex"></param>
-        /// <returns></returns>
-        public static bool IsAccountZeroed(double[,] accountsArray, int accountIndex)
-        {
-            return accountsArray[accountIndex, 2] == 0 ? true : false;
-        }
-        /// <summary>
-        /// Checks if account belongs to the CPF input. True for yes.
-        /// </summary>
-        /// <param name="accountsArray"></param>
-        /// <param name="accountIndex"></param>
-        /// <param name="cpf"></param>
-        /// <returns></returns>
-        public static bool IsAccountFromCPF(double[,] accountsArray, int accountIndex, double cpf)
-        {
-            return accountsArray[accountIndex, 0] == cpf ? true : false;
-        }
-        /// <summary>
-        /// Checks if there is enougth cash in the account for the withdrawn.
-        /// </summary>
-        /// <param name="balance"></param>
-        /// <param name="debitValue"></param>
-        /// <returns></returns>
-        public static bool IsThereEnougthCredit(double balance, double debitValue)
-        {
-            return (balance -= debitValue) >= 0 ? true : false;
-        }
-        /// <summary>
-        /// Reads account input, if found returns position on accountsArray, if not, keeps asking until 
-        /// valid input or 0 for exit.
-        /// </summary>
-        /// <param name="accountsArray"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static int ReadAccount(double[,] accountsArray, string message)
-        {
-            while (true)
-            {
-                double target = MenuLib.ReaddoubleValue(message);
-                int accountPosition = ArrayLib.Find_Ordinary(accountsArray, target, 1);
-                if (accountPosition != -1)
-                {
-                    return accountPosition;
-                }
-                else
-                {
-                    message = ("A conta digitada não foi encontrada.\n" +
-                        "Digite uma conta válida ou entre com o valor 0 para voltar ao menu principal:");
-                    target = MenuLib.ReaddoubleValue(message);
-                    if (target == 0)
-                    {
-                        return -1;
-                    }
-                }
-            }
-        }
-        /// <summary>
         /// Reads CPF input. If it is found in the clienrsArray, returns the position,
         /// if not, keeps asking for another valid input, unless user types "" to leave.
         /// </summary>
@@ -631,37 +596,101 @@ namespace MenuLibrary
             }
             else return false; //make it check according to https://www.geradorcpf.com/algoritmo_do_cpf.htm 
         }
-        public static bool TwoDecimalsCheck(double value)
+        /// <summary>
+        /// Checks if account is zeroed in balance, returns true if it is.
+        /// </summary>
+        /// <param name="accountsArray"></param>
+        /// <param name="accountIndex"></param>
+        /// <returns></returns>
+        public static bool IsAccountZeroed(decimal[,] accountsArray, int accountIndex)
         {
-            return true; //make check if there are no more than 2 decimal places
-        }
-        private static int[] DateToIntArray(string dateString)
-        {
-            int[] dateInt = new int[3];
-            string dayString = dateString.Substring(0, 2);
-            string monthString = dateString.Substring(3, 2);
-            string yearString = dateString.Substring(6, 4);
-            int.TryParse(dayString, out dateInt[0]);
-            int.TryParse(monthString, out dateInt[1]);
-            int.TryParse(yearString, out dateInt[2]);
-            return dateInt;
+            return accountsArray[accountIndex, 2] == 0 ? true : false;
         }
         /// <summary>
-        /// If under 18 years old returns true, if not returns false
+        /// Checks if account belongs to the CPF input. True for yes.
         /// </summary>
-        /// <param name="age"></param>
+        /// <param name="accountsArray"></param>
+        /// <param name="accountIndex"></param>
+        /// <param name="cpf"></param>
         /// <returns></returns>
-        public static bool Underage(int age)
+        public static bool IsAccountFromCPF(decimal[,] accountsArray, int accountIndex, decimal cpf)
         {
-
-            return (age >= 18 ? false : true);
+            return accountsArray[accountIndex, 0] == cpf ? true : false;
+        }
+        /// <summary>
+        /// Checks if there is enougth cash in the account for the withdrawn.
+        /// </summary>
+        /// <param name="balance"></param>
+        /// <param name="debitValue"></param>
+        /// <returns></returns>
+        public static bool IsThereEnougthCredit(decimal balance, decimal debitValue)
+        {
+            return (balance -= debitValue) >= 0 ? true : false;
+        }
+        /// <summary>
+        /// Reads account input, if found returns position on accountsArray, if not, keeps asking until 
+        /// valid input or 0 for exit.
+        /// </summary>
+        /// <param name="accountsArray"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static int ReadAccount(decimal[,] accountsArray, string message)
+        {
+            while (true)
+            {
+                decimal target = MenuLib.ReaddecimalValue(message);
+                int accountPosition = ArrayLib.Find_Ordinary(accountsArray, target, 1);
+                if (accountPosition != -1)
+                {
+                    return accountPosition;
+                }
+                else
+                {
+                    message = ("A conta digitada não foi encontrada.\n" +
+                        "Digite uma conta válida ou entre com o valor 0 para voltar ao menu principal:");
+                    target = MenuLib.ReaddecimalValue(message);
+                    if (target == 0)
+                    {
+                        return -1;
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Reads birth date, only accepts valid format. Keeps asking until valid format.
+        /// </summary>
+        /// <param name="clientsArray"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string ReadBirthDate(string[,] clientsArray, string message)
+        {
+            while (true)
+            {
+                string birthDateString = MenuLib.ReadStringValue(message);
+                if (DateTime.TryParseExact(birthDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime birthDate))
+                {
+                    return birthDateString;
+                }
+                message = "A data digitada é inválida. Digite uma data no formato \"DD/MM/AAAA\":";
+            }
+        }
+        /// <summary>
+        /// Checks if client is underage, returns true or false.
+        /// </summary>
+        /// <param name="birthDateString"></param>
+        /// <returns></returns>
+        public static bool IsClientUnderage(string birthDateString)
+        {
+            DateTime birthDate = DateTime.ParseExact(birthDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            return birthDate.AddYears(18) < DateTime.Today ? false : true;
         }
         /// <summary>
         /// If account ballance is negative returns true, if not returns false
         /// </summary>
         /// <param name="balance"></param>
         /// <returns></returns>
-        public static bool NegativeBalanceCheck(double balance)
+        public static bool NegativeBalanceCheck(decimal balance)
         {
             return (balance >= 0 ? false : true);
         }

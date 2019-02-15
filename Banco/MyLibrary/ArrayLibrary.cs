@@ -252,9 +252,9 @@ namespace ArrayLibrary
             }
             return newArray;
         }
-        public static double[,] AddOneLength(double[,] array)
+        public static decimal[,] AddOneLength(decimal[,] array)
         {
-            double[,] newArray = new double[array.GetLength(0) + 1, array.GetLength(1)];
+            decimal[,] newArray = new decimal[array.GetLength(0) + 1, array.GetLength(1)];
             for (int i = 0; i < array.GetLength(0); i++)
             {
                 for (int x = 0; x < array.GetLength(1); x++)
@@ -281,9 +281,9 @@ namespace ArrayLibrary
             }
             return newArray;
         }
-        public static double[,] RemoveLast(double[,] array)
+        public static decimal[,] RemoveLast(decimal[,] array)
         {
-            double[,] newArray = new double[array.GetLength(0) - 1, array.GetLength(1)];
+            decimal[,] newArray = new decimal[array.GetLength(0) - 1, array.GetLength(1)];
             for (int i = 0; i < array.GetLength(0) - 1; i++)
             {
                 for (int x = 0; x < array.GetLength(1); x++)
@@ -344,7 +344,7 @@ namespace ArrayLibrary
             }
             return -1;
         }
-        public static int Find_Ordinary(double[,] array, double target, int columnTargetIs)
+        public static int Find_Ordinary(decimal[,] array, decimal target, int columnTargetIs)
         {
             for (int i = 0; i < array.GetLength(0); i++)
             {
@@ -488,9 +488,9 @@ namespace ArrayLibrary
             }
             return array;
         }
-        public static double[,] SwapLines(double[,] array, int line1, int line2)
+        public static decimal[,] SwapLines(decimal[,] array, int line1, int line2)
         {
-            double aux = 0;
+            decimal aux = 0;
             for (int i = 0; i < array.GetLength(1); i++)
             {
                 aux = array[line1, i];

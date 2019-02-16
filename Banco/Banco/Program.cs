@@ -101,7 +101,9 @@ namespace Banco
         public static void OperationsMenu(string[,] clientsArray, decimal[,] accountsArray)
         {
             MenuLib.PrintSubmenu("ACESSO AO MENU DE OPERAÇÕES");
-            int accountIndex = Verifications.ReadAccount(accountsArray, "Digite a conta na qual deseja realizar a operação:");
+            int accountIndex = Verifications.ReadAccount(accountsArray, 
+                "Digite a conta na qual deseja realizar a operação:");
+            AccountsLib.PrintAccount(accountsArray, accountIndex);
             if (!MenuLib.ConfirmationMenu("A conta está correta?", "Sim", "Não, voltar para menu principal"))
             {
                 MainMenu(clientsArray, accountsArray);

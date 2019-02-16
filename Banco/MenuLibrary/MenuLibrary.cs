@@ -337,9 +337,18 @@ namespace MenuLibrary
         {
             string message = "Digite o CPF do Cliente:";
             while (true)
-            {
+            {                
                 string cpf = MenuLib.ReadStringValue(message);
-                if (!Verifications.CPFAlreadyExists(clientsArray, cpf))  //validates CPF
+                if (cpf == "")
+                {
+                    return false;
+                }
+                if (!Verifications.CPFValidation(cpf))
+                {
+                    MenuLib.PrintMessage("CPF inválido.\n" +
+                        "Digite um CPF válido ou pressione qualquer tecla para retornar ao Menu.");
+                }
+                else if (!Verifications.CPFAlreadyExists(clientsArray, cpf))
                 {
                     MenuLib.PrintMessage("CPF já cadastrado no nosso banco de dados.\n" +
                         "Pressione qualquer tecla para retornar ao Menu.");
@@ -350,7 +359,7 @@ namespace MenuLibrary
                 {
                     clientsArray[clientIndex, 0] = cpf;
                     return true;
-                }
+                }                
             }
         }
         /// <summary>
@@ -520,6 +529,37 @@ namespace MenuLibrary
                 accountsArray[accountIndex, 1], accountsArray[accountIndex, 2]);
         }
         /// <summary>
+        /// Didn't work because CPFs starting with 0 get miss converted to int. E.G: 01604075678 to 1604075678.
+        /// </summary>
+        /// <param name="accountsArray"></param>
+        /// <param name="clientsArray"></param>
+        /// <param name="accountIndex"></param>
+        /// <param name="message"></param>
+        public static void PrintAccountNameAndCPF(decimal[,] accountsArray, string[,] clientsArray,
+            int accountIndex, string message)
+        {
+            MenuLib.PrintMessage(message);
+            string cpf = Convert.ToString(accountsArray[accountIndex, 0]);
+            int clientIndex = ArrayLib.Find_Binary(clientsArray, cpf, 0);
+            Console.WriteLine("\nNúmero da conta: {0}\nNome do cliente: {1:C}\nCPF:{2}",
+                accountsArray[accountIndex, 1], clientsArray[clientIndex, 1], ClientsLib.CPFFormat(cpf));
+        }
+        /// <summary>
+        /// Didn't work because CPFs starting with 0 get miss converted to int. E.G: 01604075678 to 1604075678.
+        /// </summary>
+        /// <param name="accountsArray"></param>
+        /// <param name="clientsArray"></param>
+        /// <param name="accountIndex"></param>
+        /// <param name="message"></param>
+        public static void PrintAccountNameAndCPF(decimal[,] accountsArray, string[,] clientsArray,
+           int accountIndex)
+        {
+            string cpf = Convert.ToString(accountsArray[accountIndex, 0]);
+            int clientIndex = ArrayLib.Find_Binary(clientsArray, cpf, 0);
+            Console.WriteLine("\nNúmero da conta: {0}\nNome do cliente: {1:C}\nCPF:{2}",
+                accountsArray[accountIndex, 1], clientsArray[clientIndex, 1], ClientsLib.CPFFormat(cpf));
+        }
+        /// <summary>
         /// Prints account number + account balance.
         /// </summary>
         /// <param name="accountsArray"></param>
@@ -594,7 +634,46 @@ namespace MenuLibrary
             {
                 return true;
             }
-            else return false; //make it check according to https://www.geradorcpf.com/algoritmo_do_cpf.htm 
+            else return false;
+        }
+        /// <summary>
+        /// Validates CPF number using the method of the 2 last verifing digits.
+        /// </summary>
+        /// <param name="cpfString"></param>
+        /// <returns></returns>
+        public static bool CPFValidation(string cpfString)
+        {
+            if (cpfString.Length == 11)
+            {
+                int[] cpf = new int[11];
+                for (int i = 0; i < 11; i++)
+                {
+                    cpf[i] = (int)Char.GetNumericValue(cpfString[i]);
+                }
+                int[] firstDigitCheckMultipliers = new int[] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+                int firstCheckSum = 0;
+                for (int i = 0; i < 9; i++)
+                {
+                    firstCheckSum += cpf[i] * firstDigitCheckMultipliers[i];
+                }
+                int verificationDigit1 = ((firstCheckSum % 11) < 2) ? 0 : 11 - (firstCheckSum % 11);
+                if (verificationDigit1 == cpf[9])
+                {
+                    int[] secondDigitCheckMultipliers = new int[] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+                    int secondCheckSum = 0;
+                    for (int i = 0; i < 10; i++)
+                    {
+                        secondCheckSum += cpf[i] * secondDigitCheckMultipliers[i];
+                    }
+                    int verificationDigit2 = ((secondCheckSum % 11) < 2) ? 0 : 11 - (secondCheckSum % 11);
+                    if (verificationDigit2 == cpf[10])
+                    {
+                        return true;
+                    }
+                }
+                else return false;
+            }
+            return false;
         }
         /// <summary>
         /// Checks if account is zeroed in balance, returns true if it is.

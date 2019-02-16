@@ -33,6 +33,13 @@ namespace ArrayLibrary
                 Console.Write(array[i] + (i < (array.Length - 1) ? ", " : ".\n"));
             }
         }
+        public static void PrintArray(int[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + (i < (array.Length - 1) ? ", " : ".\n"));
+            }
+        }
         ///prints an array with indexes, example: {name1 , name2 , name3} = "0. name1, 1. name2, 2. name3."
         public static void PrintArrayWithIndexes(string[] array)
         {
@@ -355,36 +362,43 @@ namespace ArrayLibrary
             }
             return -1;
         }
-        //public static int Find_Binary(string[] array, string target)//returns the position of the target or -1 if not found. THE ARRAY WILL BE SORTED after using this. 
-        //                                                            //Method: sorts the array, checks in witch half target is, than witch half of that half, and so on until it finds it 
-        //{
-        //    int start = 0;
-        //    int end = array.Length - 1;
-        //    int mid = 0;
-        //    SortArray_BubbleSort(array);
-        //    do
-        //    {
-        //        mid = MiddlePosition(start, end);
-        //        if (IsTheFirstSmaller(target, array[mid])) //checks if the inserted name is smaller than middle position string
-        //        {
-        //            end = mid;
-        //        }
-        //        else
-        //        {
-        //            start = mid;
-        //        }
-        //    }
-        //    while (end - start > 1);
-        //    if (array[end] == target)
-        //    {
-        //        return end;
-        //    }
-        //    else if (array[start] == target)
-        //    {
-        //        return start;
-        //    }
-        //    else return -1;
-        //}
+        /// <summary>
+        /// Returns the position of the target or -1 if not found. THE ARRAY WILL BE SORTED after using this. 
+        /// Method: sorts the array, checks in witch half target is, than witch half of that half, and so on until it finds it. 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="target"></param>
+        /// <param name="columnTargetIs":></param>
+        /// <returns></returns>
+        public static int Find_Binary(string[,] array, string target, int columnTargetIs)
+        {
+            int start = 0;
+            int end = array.GetLength(0) - 1;
+            int mid = 0;
+            SortArray_BubbleSort(array,columnTargetIs);
+            do
+            {
+                mid = MiddlePosition(start, end);
+                if (IsTheFirstSmaller(target, array[mid,columnTargetIs])) //checks if the inserted name is smaller than middle position string
+                {
+                    end = mid;
+                }
+                else
+                {
+                    start = mid;
+                }
+            }
+            while (end - start > 1);
+            if (array[end,columnTargetIs] == target)
+            {
+                return end;
+            }
+            else if (array[start,columnTargetIs] == target)
+            {
+                return start;
+            }
+            else return -1;
+        }
         //public static string[] Join(string[] piece1, string[] piece2) //returns an array with the elements of piece1 followed by elements of piece2
         //{
         //    string[] jointedPieces = new string[(piece1.Length + piece2.Length)];
@@ -431,26 +445,32 @@ namespace ArrayLibrary
         //    }
         //    return array;
         //}
-        //public static string[] SortArray_BubbleSort(string[] array) //sorts an array with Bubble Sort method, this is the enhanced version
-        //{
-        //    int iMax = array.Length - 1;
-        //    int lastSwap = 0;
-        //    do
-        //    {
-        //        lastSwap = 0;
-        //        for (int i = 0; i < iMax; i++)
-        //        {
-        //            if (!IsTheFirstSmaller(array[i], array[i + 1]))
-        //            {
-        //                SwapPositions(array, i, i + 1);
-        //                lastSwap = i;
-        //            }
-        //        }
-        //        iMax = lastSwap;
-        //    }
-        //    while (lastSwap != 0);
-        //    return array;
-        //}
+        /// <summary>
+        /// Sorts the array by the order of the elements from columnToSort.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="columnToSort"></param>
+        /// <returns></returns>
+        public static string[,] SortArray_BubbleSort(string[,] array, int columnToSort) 
+        {
+            int iMax = array.GetLength(0) - 1;
+            int lastSwap = 0;
+            do
+            {
+                lastSwap = 0;
+                for (int i = 0; i < iMax; i++)
+                {
+                    if (!IsTheFirstSmaller(array[i,columnToSort], array[i + 1,columnToSort]))
+                    {
+                        SwapLines(array, i, i + 1);
+                        lastSwap = i;
+                    }
+                }
+                iMax = lastSwap;
+            }
+            while (lastSwap != 0);
+            return array;
+        }
         //public static string[] SortArray_InsertionSort(string[] array) //by finding the smallest string then swaping it with the first one on the array, and so on
         //{
         //    int lastOrdered = 0;
@@ -499,40 +519,6 @@ namespace ArrayLibrary
             }
             return array;
         }
-        //private static bool IsTheFirstSmaller(string string1, string string2) //checks if string1 is smaller than string2, returns true or false
-        //{
-        //    bool smaller = true;
-        //    bool smallerFound = false;
-        //    int a = 0;
-        //    int max = string1.Length > string2.Length ? string2.Length : string1.Length; //uses the smaller length vallue
-        //    do
-        //    {
-        //        if (string1[a] > string2[a])
-        //        {
-        //            smaller = false;
-        //            smallerFound = true;
-        //        }
-        //        else if (string1[a] < string2[a])
-        //        {
-        //            smaller = true;
-        //            smallerFound = true;
-        //        }
-        //        else
-        //        {
-        //            a++;
-        //        }
-        //    }
-        //    while (!smallerFound && a < max);
-        //    if (!smallerFound)
-        //    {
-        //        smaller = string1.Length > string2.Length ? false : true; //if all the compared characters are equal, then the string with less characters is the smaller
-        //    }
-        //    return smaller;
-        //}
-        //private static int MiddlePosition(int number1, int number2) //returns the average between number1 and number2
-        //{
-        //    return (number1 + number2) / 2;
-        //}
         #endregion
     }
 }

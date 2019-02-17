@@ -77,27 +77,33 @@ namespace Banco
                 string[] accountsMenuOptions = new string[] { "Criar uma nova conta",
                     "Remover uma conta", "Consultar contas do cliente",
                     "Retornar ao menu principal" };
-                MenuLib.PrintMenu(accountsMenuOptions, "MENU DE CONTAS");
-                MenuLib.PrintMessage("Acessando as contas de:\n");
-                ClientsLib.PrintClientNameAndCPF(clientsArray, clientPosition);
-                Console.WriteLine();
-                string accountsMenuChoice = MenuLib.ReadOption(accountsMenuOptions);
-                switch (accountsMenuChoice)
+                bool returnToMainMenu = false;
+                do
                 {
-                    case "Criar uma nova conta":
-                        accountsArray = AccountsLib.AddNewAccount(accountsArray, clientCPF);
-                        break;
-                    case "Remover uma conta":
-                        accountsArray = AccountsLib.RemoveAccount(accountsArray, clientCPF);
-                        break;
-                    case "Consultar contas do cliente":
-                        AccountsLib.ConsultAccounts(accountsArray, clientCPF);
-                        break;
-                    case "Retornar ao menu principal":
-                        break;
+                    MenuLib.PrintMenu(accountsMenuOptions, "MENU DE CONTAS");
+                    MenuLib.PrintMessage("Acessando as contas de:\n");
+                    ClientsLib.PrintClientNameAndCPF(clientsArray, clientPosition);
+                    Console.WriteLine();
+                    string accountsMenuChoice = MenuLib.ReadOption(accountsMenuOptions);
+                    switch (accountsMenuChoice)
+                    {
+                        case "Criar uma nova conta":
+                            accountsArray = AccountsLib.AddNewAccount(accountsArray, clientCPF);
+                            break;
+                        case "Remover uma conta":
+                            accountsArray = AccountsLib.RemoveAccount(accountsArray, clientCPF);
+                            break;
+                        case "Consultar contas do cliente":
+                            AccountsLib.ConsultAccounts(accountsArray, clientCPF);
+                            break;
+                        case "Retornar ao menu principal":
+                            returnToMainMenu = true;
+                            break;
+                    }
                 }
+                while (!returnToMainMenu);
+                MainMenu(clientsArray, accountsArray);
             }
-            MainMenu(clientsArray, accountsArray);
         }
         public static void OperationsMenu(string[,] clientsArray, decimal[,] accountsArray)
         {

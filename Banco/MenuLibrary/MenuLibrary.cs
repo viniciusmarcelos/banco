@@ -251,18 +251,18 @@ namespace MenuLibrary
             {
                 Console.Clear();
                 PrintClient(clientsArray, clientPosition, "Cliente que será removido:");
-                if (MenuLib.ConfirmationMenu("Tem certeza que deseja deletar o cliente?"))
+                if (MenuLib.ConfirmationMenu("\nTem certeza que deseja deletar o cliente?"))
                 {
                     if (clientsArray.GetLength(0) - 1 != clientPosition)
                     {
                         clientsArray = ArrayLib.SwapLines(clientsArray, clientPosition, clientsArray.GetLength(0) - 1);
                     }
                     clientsArray = ArrayLib.RemoveLast(clientsArray);
-                    MenuLib.PrintMessage("O cliente foi deletado. Pressione ENTER para retornar ao menu principal:");
+                    MenuLib.PrintMessage("\nO cliente foi deletado. Pressione ENTER para retornar ao menu principal:");
                     Console.ReadKey();
                     return clientsArray;
                 }
-                MenuLib.PrintMessage("Operação cancelada.\n" +
+                MenuLib.PrintMessage("\nOperação cancelada.\n\n" +
                     "Pressione ENTER para retornar ao menu principal:");
                 Console.ReadKey();
             }
@@ -314,7 +314,7 @@ namespace MenuLibrary
         /// <returns></returns>
         public static string CPFFormat(string cpfImput)
         {
-            int cpf = Convert.ToInt32(cpfImput);
+            decimal cpf = Convert.ToInt64(cpfImput);
             return string.Format(@"{0:000\.000\.000-00}", cpf);
         }
         /// <summary>
@@ -337,7 +337,7 @@ namespace MenuLibrary
         {
             string message = "Digite o CPF do Cliente:";
             while (true)
-            {                
+            {
                 string cpf = MenuLib.ReadStringValue(message);
                 if (cpf == "")
                 {
@@ -359,7 +359,7 @@ namespace MenuLibrary
                 {
                     clientsArray[clientIndex, 0] = cpf;
                     return true;
-                }                
+                }
             }
         }
         /// <summary>
@@ -436,8 +436,8 @@ namespace MenuLibrary
                 accountsArray[newAccountPosition, 0] = cpf;
                 accountsArray[newAccountPosition, 1] = accountsArray[newAccountPosition - 1, 1] + 1;
                 accountsArray[newAccountPosition, 2] = 50;
-                PrintAccount(accountsArray, newAccountPosition, "\nA conta foi criada com sucesso! Veja:");
-                MenuLib.PrintMessage("Pressione qualquer tecla para retornar ao Menu.");
+                PrintAccount(accountsArray, newAccountPosition, "\nA conta foi criada com sucesso! Confira:");
+                MenuLib.PrintMessage("\nPressione qualquer tecla para retornar ao menu de contas.");
                 Console.ReadKey();
             }
             return accountsArray;
@@ -467,27 +467,27 @@ namespace MenuLibrary
                                 accountsArray = ArrayLib.SwapLines(accountsArray, accountPosition, accountsArray.GetLength(0) - 1);
                             }
                             accountsArray = ArrayLib.RemoveLast(accountsArray);
-                            MenuLib.PrintMessage("A conta foi deletada. Pressione ENTER para retornar ao menu principal:");
+                            MenuLib.PrintMessage("\nA conta foi deletada. Pressione ENTER para retornar ao menu de contas:");
                             Console.ReadKey();
                             return accountsArray;
                         }
-                        MenuLib.PrintMessage("Operação cancelada pelo usuário.\n" +
-                            "Pressione ENTER para retornar ao menu principal:");
+                        MenuLib.PrintMessage("\nOperação cancelada pelo usuário.\n\n" +
+                            "Pressione ENTER para retornar ao menu de contas:");
                         Console.ReadKey();
                     }
                     else
                     {
-                        MenuLib.PrintMessage("A operação não pôde ser concluída pois há saldo na conta.\n" +
-                        "Primeiramente deve ser feito o saque de todo o saldo da conta.\n" +
-                        "Pressione ENTER para retornar ao menu principal:");
+                        MenuLib.PrintMessage("\nA operação não pôde ser concluída pois há saldo na conta.\n" +
+                        "Primeiramente deve ser feito o saque de todo o saldo da conta.\n\n" +
+                        "Pressione ENTER para retornar ao menu de contas:");
                         Console.ReadKey();
                     }
                 }
                 else
                 {
                     MenuLib.PrintMessage("A operação não pôde ser concluída pois a conta não pertence a este CPF.\n" +
-                    "Verifique o número da conta e do CPF digitados e tente novamente.\n" +
-                    "Pressione ENTER para retornar ao menu principal:");
+                    "Verifique o número da conta e do CPF digitados e tente novamente.\n\n" +
+                    "Pressione ENTER para retornar ao de contas:");
                     Console.ReadKey();
                 }
             }
@@ -502,7 +502,7 @@ namespace MenuLibrary
         public static void ConsultAccounts(decimal[,] accountsArray, decimal cpf)
         {
             MenuLib.PrintSubmenu("CONSULTANDO AS CONTAS");
-            Console.WriteLine("Para o CPF informado ({0}), temos as seguintes contas:\n", cpf);
+            Console.WriteLine("Para o CPF informado ({0}), temos as seguintes contas:", ClientsLib.CPFFormat(CPFDecimalToString(cpf)));
             decimal totalBalance = 0;
             for (int i = 0; i < accountsArray.GetLength(0); i++)
             {
@@ -512,8 +512,15 @@ namespace MenuLibrary
                     totalBalance += accountsArray[i, 2];
                 }
             }
-            Console.WriteLine("\nO balanço total do cliente é: {0:C}\n" +
-                "Digite qualquer tecla para retornar ao menu principal.", totalBalance);
+            if (totalBalance != 0)
+            {
+                Console.WriteLine("\nO balanço total do cliente é: {0:C}\n\n" +
+                    "Digite qualquer tecla para retornar ao menu de contas.", totalBalance);
+            }
+            else
+            {
+                Console.WriteLine("O cliente não possui nenhuma conta cadastrada.");
+            }
             Console.ReadKey();
         }
         /// <summary>
@@ -529,27 +536,36 @@ namespace MenuLibrary
                 accountsArray[accountIndex, 1], accountsArray[accountIndex, 2]);
         }
         /// <summary>
-        /// Didn't work because CPFs starting with 0 get miss converted to int. E.G: 01604075678 to 1604075678.
+        /// Prints account number, name of the client and CPF.
         /// </summary>
         /// <param name="accountsArray"></param>
         /// <param name="clientsArray"></param>
         /// <param name="accountIndex"></param>
-        /// <param name="message"></param>
         public static void PrintAccountNameAndCPF(decimal[,] accountsArray, string[,] clientsArray,
             int accountIndex)
         {
-            string cpf = Convert.ToString(accountsArray[accountIndex, 0]);
-            while (true)
-            {
-                if (cpf.Length != 11)
-                {
-                    cpf = "0" + cpf;
-                }
-                else break;
-            }
+            string cpf = CPFDecimalToString(accountsArray[accountIndex, 0]);
             int clientIndex = ArrayLib.Find_Binary(clientsArray, cpf, 0);
             Console.WriteLine("\nNúmero da conta: {0}\nNome do cliente: {1:C}\nCPF:{2}",
                 accountsArray[accountIndex, 1], clientsArray[clientIndex, 1], ClientsLib.CPFFormat(cpf));
+        }
+        /// <summary>
+        /// Adds zeroes if the stored CPF removed the zeroes on the left.
+        /// </summary>
+        /// <param name="cpfDecimal"></param>
+        /// <returns></returns>
+        public static string CPFDecimalToString(decimal cpfDecimal)
+        {
+            string cpfString = Convert.ToString(cpfDecimal);
+            while (true)
+            {
+                if (cpfString.Length != 11)
+                {
+                    cpfString = "0" + cpfString;
+                }
+                else break;
+            }
+            return cpfString;
         }
         /// <summary>
         /// Prints account number + account balance.

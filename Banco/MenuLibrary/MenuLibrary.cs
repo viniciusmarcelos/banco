@@ -345,12 +345,12 @@ namespace MenuLibrary
                 }
                 if (!Verifications.CPFValidation(cpf))
                 {
-                    MenuLib.PrintMessage("CPF inválido.\n" +
+                    MenuLib.PrintMessage("\nCPF inválido.\n\n" +
                         "Digite um CPF válido ou pressione qualquer tecla para retornar ao Menu.");
                 }
                 else if (!Verifications.CPFAlreadyExists(clientsArray, cpf))
                 {
-                    MenuLib.PrintMessage("CPF já cadastrado no nosso banco de dados.\n" +
+                    MenuLib.PrintMessage("\nCPF já cadastrado no nosso banco de dados.\n\n" +
                         "Pressione qualquer tecla para retornar ao Menu.");
                     Console.ReadKey();
                     return false;
@@ -536,25 +536,17 @@ namespace MenuLibrary
         /// <param name="accountIndex"></param>
         /// <param name="message"></param>
         public static void PrintAccountNameAndCPF(decimal[,] accountsArray, string[,] clientsArray,
-            int accountIndex, string message)
-        {
-            MenuLib.PrintMessage(message);
-            string cpf = Convert.ToString(accountsArray[accountIndex, 0]);
-            int clientIndex = ArrayLib.Find_Binary(clientsArray, cpf, 0);
-            Console.WriteLine("\nNúmero da conta: {0}\nNome do cliente: {1:C}\nCPF:{2}",
-                accountsArray[accountIndex, 1], clientsArray[clientIndex, 1], ClientsLib.CPFFormat(cpf));
-        }
-        /// <summary>
-        /// Didn't work because CPFs starting with 0 get miss converted to int. E.G: 01604075678 to 1604075678.
-        /// </summary>
-        /// <param name="accountsArray"></param>
-        /// <param name="clientsArray"></param>
-        /// <param name="accountIndex"></param>
-        /// <param name="message"></param>
-        public static void PrintAccountNameAndCPF(decimal[,] accountsArray, string[,] clientsArray,
-           int accountIndex)
+            int accountIndex)
         {
             string cpf = Convert.ToString(accountsArray[accountIndex, 0]);
+            while (true)
+            {
+                if (cpf.Length != 11)
+                {
+                    cpf = "0" + cpf;
+                }
+                else break;
+            }
             int clientIndex = ArrayLib.Find_Binary(clientsArray, cpf, 0);
             Console.WriteLine("\nNúmero da conta: {0}\nNome do cliente: {1:C}\nCPF:{2}",
                 accountsArray[accountIndex, 1], clientsArray[clientIndex, 1], ClientsLib.CPFFormat(cpf));

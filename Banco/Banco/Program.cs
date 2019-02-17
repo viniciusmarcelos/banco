@@ -74,8 +74,9 @@ namespace Banco
             if (clientPosition != -1)
             {
                 decimal.TryParse(clientsArray[clientPosition, 0], out decimal clientCPF);
-                string[] accountsMenuOptions = new string[] { "Criar uma nova conta", "Remover uma conta",
-                "Consultar contas do cliente", "Retornar ao menu principal" };
+                string[] accountsMenuOptions = new string[] { "Criar uma nova conta",
+                    "Remover uma conta", "Consultar contas do cliente",
+                    "Retornar ao menu principal" };
                 MenuLib.PrintMenu(accountsMenuOptions, "MENU DE CONTAS");
                 MenuLib.PrintMessage("Acessando as contas de:\n");
                 ClientsLib.PrintClientNameAndCPF(clientsArray, clientPosition);
@@ -101,64 +102,70 @@ namespace Banco
         public static void OperationsMenu(string[,] clientsArray, decimal[,] accountsArray)
         {
             MenuLib.PrintSubmenu("ACESSO AO MENU DE OPERAÇÕES");
-            int accountIndex = Verifications.ReadAccount(accountsArray, 
+            int accountIndex = Verifications.ReadAccount(accountsArray,
                 "Digite a conta na qual deseja realizar a operação:");
-            AccountsLib.PrintAccount(accountsArray, accountIndex);
-            if (!MenuLib.ConfirmationMenu("A conta está correta?", "Sim", "Não, voltar para menu principal"))
+            if (accountIndex != -1)
             {
-                MainMenu(clientsArray, accountsArray);
-            }
-            string[] operationsMenu = new string[] { "Depósito", "Saque",
-                "Retornar ao menu principal" };
-            MenuLib.PrintMenu(operationsMenu, "MENU DE OPERAÇÕES");
-            string operationsMenuChoice = MenuLib.ReadOption(operationsMenu);
-            switch (operationsMenuChoice)
-            {
-                case "Depósito":
-                    decimal creditValue = MenuLib.ReadMoneyValue("Entre com o valor a ser depositado na conta:");
-                    if (MenuLib.ConfirmationMenu("Confirma a operação?"))
+                AccountsLib.PrintAccountNameAndCPF(accountsArray, clientsArray, accountIndex);
+                if (MenuLib.ConfirmationMenu("\nA conta está correta?", "Sim", "Não, voltar para " +
+                    "menu principal"))
+                {
+                    string[] operationsMenu = new string[] { "Depósito", "Saque",
+                        "Retornar ao menu principal" };
+                    MenuLib.PrintMenu(operationsMenu, "MENU DE OPERAÇÕES");
+                    string operationsMenuChoice = MenuLib.ReadOption(operationsMenu);
+                    switch (operationsMenuChoice)
                     {
-                        accountsArray[accountIndex, 2] += creditValue;
-                        MenuLib.PrintMessage("Operação realizada com sucesso!\n");
-                        AccountsLib.PrintAccount(accountsArray, accountIndex);
-                        MenuLib.PrintMessage("Digite qualquer tecla para retornar ao menu.");
-                        Console.ReadKey();
+                        case "Depósito":
+                            decimal creditValue = MenuLib.ReadMoneyValue("Entre com o valor a ser " +
+                                "depositado na conta:");
+                            if (MenuLib.ConfirmationMenu("\nConfirma a operação?"))
+                            {
+                                accountsArray[accountIndex, 2] += creditValue;
+                                MenuLib.PrintMessage("Operação realizada com sucesso!\n");
+                                AccountsLib.PrintAccount(accountsArray, accountIndex);
+                                MenuLib.PrintMessage("Digite qualquer tecla para retornar ao menu.");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                MenuLib.PrintMessage("\nOperação cancelada pelo usuário.\n" +
+                                    "Digite qualquer tecla para retornar ao menu.");
+                                Console.ReadKey();
+                            }
+                            break;
+                        case "Saque":
+                            decimal debitValue = MenuLib.ReadMoneyValue("Entre com o valor a ser " +
+                                "debitado da conta:");
+                            if (!Verifications.IsThereEnougthCredit(accountsArray[accountIndex, 2],
+                                debitValue))
+                            {
+                                MenuLib.PrintMessage("\nSaldo insuficiente.\n\n" +
+                                    "Pressione qualquer tecla para retornar ao menu.");
+                                Console.ReadKey();
+                                break;
+                            }
+                            if (MenuLib.ConfirmationMenu("\nConfirma a operação?"))
+                            {
+                                accountsArray[accountIndex, 2] -= debitValue;
+                                MenuLib.PrintMessage("Operação realizada com sucesso!\n\n" +
+                                    "Saldo atualizado:\n");
+                                AccountsLib.PrintBalance(accountsArray, accountIndex);
+                                MenuLib.PrintMessage("Digite qualquer tecla para retornar ao menu.");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                MenuLib.PrintMessage("\nOperação cancelada pelo usuário.\n\n" +
+                                    "Digite qualquer tecla para retornar ao menu.");
+                                Console.ReadKey();
+                            }
+                            break;
+                        case "Retornar ao menu principal":
+                            MainMenu(clientsArray, accountsArray);
+                            break;
                     }
-                    else
-                    {
-                        MenuLib.PrintMessage("Operação cancelada pelo usuário.\n" +
-                            "Digite qualquer tecla para retornar ao menu.");
-                        Console.ReadKey();
-                    }
-                    break;
-                case "Saque":
-                    decimal debitValue = MenuLib.ReadMoneyValue("Entre com o valor a ser debitado da conta:");
-                    if (!Verifications.IsThereEnougthCredit(accountsArray[accountIndex, 2], debitValue))
-                    {
-                        MenuLib.PrintMessage("Saldo insuficiente.\n\n" +
-                            "Pressione qualquer tecla para retornar ao menu.");
-                        Console.ReadKey();
-                        break;
-                    }
-                    if (MenuLib.ConfirmationMenu("Confirma a operação?"))
-                    {
-                        accountsArray[accountIndex, 2] -= debitValue;
-                        MenuLib.PrintMessage("Operação realizada com sucesso!\n\n" +
-                            "Saldo atualizado:\n");
-                        AccountsLib.PrintBalance(accountsArray, accountIndex);
-                        MenuLib.PrintMessage("Digite qualquer tecla para retornar ao menu.");
-                        Console.ReadKey();
-                    }
-                    else
-                    {
-                        MenuLib.PrintMessage("Operação cancelada pelo usuário.\n\n" +
-                            "Digite qualquer tecla para retornar ao menu.");
-                        Console.ReadKey();
-                    }
-                    break;
-                case "Retornar ao menu principal":
-                    MainMenu(clientsArray, accountsArray);
-                    break;
+                }
             }
             MainMenu(clientsArray, accountsArray);
         }

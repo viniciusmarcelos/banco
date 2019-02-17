@@ -325,6 +325,31 @@ namespace ArrayLibrary
                 }
             }
         }
+        ///prints the 2D array using ", " between the position (1),
+        ///";\n" between the position (0) and ".\n" for the last one
+        public static void PrintArray(decimal[,] array)
+        {
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                Console.WriteLine();
+                for (int x = 0; x < array.GetLength(1); x++)
+                {
+                    Console.Write(array[i, x]);
+                    if (x < array.GetLength(1) - 1)
+                    {
+                        Console.Write(", ");
+                    }
+                    else if (i != array.GetLength(0) - 1)
+                    {
+                        Console.Write(";\n");
+                    }
+                    else
+                    {
+                        Console.Write(".\n");
+                    }
+                }
+            }
+        }
         //public static void PrintArrayWithIndexes(string[] array) //prints an array with indexes, example: {name1 , name2 , name3} = "0. name1, 1. name2, 2. name3."
         //{
         //    for (int i = 0; i < array.Length; i++)
@@ -489,7 +514,6 @@ namespace ArrayLibrary
         //    while (lastOrdered < array.Length - 1);
         //    return array;
         //}
-
         /// <summary>
         /// Imputs string[line,column] and swaps the position of all of the elements from the line position1 to line position2.
         /// </summary>

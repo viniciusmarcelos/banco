@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Banco", "Banco\Banco.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArrayLibrary", "MyLibrary\ArrayLibrary.csproj", "{A7DACDD2-18AF-4AAF-A7A5-91D9F6D0BFC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuLibrary", "MenuLibrary\MenuLibrary.csproj", "{B84C2BEE-5C9E-4B12-B255-F3551EBD07D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuLibrary", "MenuLibrary\MenuLibrary.csproj", "{B84C2BEE-5C9E-4B12-B255-F3551EBD07D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectExercices", "ObjectExercices\ObjectExercices.csproj", "{82A0BEA0-5CD4-4E2A-90FB-9FDC3F9D1E55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess", "Chess\Chess.csproj", "{54A685B2-C18A-4208-84EE-917836D7BCB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{B84C2BEE-5C9E-4B12-B255-F3551EBD07D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B84C2BEE-5C9E-4B12-B255-F3551EBD07D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B84C2BEE-5C9E-4B12-B255-F3551EBD07D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82A0BEA0-5CD4-4E2A-90FB-9FDC3F9D1E55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82A0BEA0-5CD4-4E2A-90FB-9FDC3F9D1E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82A0BEA0-5CD4-4E2A-90FB-9FDC3F9D1E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82A0BEA0-5CD4-4E2A-90FB-9FDC3F9D1E55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54A685B2-C18A-4208-84EE-917836D7BCB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54A685B2-C18A-4208-84EE-917836D7BCB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54A685B2-C18A-4208-84EE-917836D7BCB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54A685B2-C18A-4208-84EE-917836D7BCB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

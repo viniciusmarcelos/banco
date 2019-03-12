@@ -27,7 +27,7 @@ namespace Chess
                 rook1MovementOptions[i].Print();
             }
 
-            Position bishop1StartingPosition = new Position(2, 0);
+            Position bishop1StartingPosition = new Position(0, 0);
             Bishop bishop1 = new Bishop(bishop1StartingPosition);
             Position[] bishop1MovementOptions = bishop1.MovementOptions();
             Console.WriteLine("A posição inicial do Bispo 1 é:");
@@ -60,7 +60,7 @@ namespace Chess
                 queen1MovementOptions[i].Print();
             }
 
-            Position king1StartingPosition = new Position(3, 0);
+            Position king1StartingPosition = new Position(0, 0);
             King king1 = new King(king1StartingPosition);
             Position[] king1MovementOptions = king1.MovementOptions();
             Console.WriteLine("A posição inicial do Rei 1 é:");

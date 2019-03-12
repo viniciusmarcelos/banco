@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chess.Pieces
+﻿namespace Chess.Pieces
 {
     public class Knight
     {
         public Position Pos { get; set; }
+
         public Knight(Position pos)
         {
             Pos = pos;
         }
+
         public Position[] MovementOptions()
         {
             int i = 0;
